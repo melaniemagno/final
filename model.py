@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
 
-
 Base = declarative_base()
 
 class Users(Base):
