@@ -1,14 +1,48 @@
 ﻿@page "/blogposts"
+@using final.Components.Pages
 @using final.Components
 @using final.Components.Layout
 @using final.Data
 @using final.Services
-@inject DbApi Api
-@inject InterfaceAPI InterfaceAPI
+@inject DbApi ApiService
+@inject InterfaceAPI RetrievalApi
 
 <h3>Generic Blog Site</h3>
 
+
+<h3>Manage the Users</h3>
 <div>
+
+    Managing the users list:
+    <div>
+        Add User:
+        <br />Name: <input type="text" id="Name" @bind="name" />
+        <br />email address: <input type="text" id="Email" @bind="email" />
+        <br />Username: <input type="text" id="Username" @bind="username" />
+        <br />Password: <input type="text" id="Password" @bind="password" />
+        <button @onclick=AddUser>Add User</button>
+    </div>
+    -----------------------------------------------------------
+    <div>
+        Enter the user id number you want to edit:
+        <br />User ID #: <input type="text" id="ID" @bind="useId" />
+        <br />Change Name to: <input type="text" id="Name" @bind="name2" />
+        <br />Change Email to: <input type="text" id="Email" @bind="email2" />
+        <br />Change Username to: <input type="text" id="Username" @bind="username2" />
+        <br />Change Password to: <input type="text" id="Password" @bind="password2" />
+        <button @onclick=EditUser>Edit User</button>
+
+    </div>
+    -----------------------------------------------------------
+    <div>
+        Enter the user id number you want to delete
+        <input type="text" id="ID" @bind="useId2" />
+        <button @onclick=DeleteUser>Delete User</button>
+    </div>
+</div>
+
+<div>
+    List of Users:
     <table>
         <thead>
             <tr>
@@ -16,27 +50,14 @@
             </tr>
         </thead>
         <tbody>            
-            @foreach(Users u in users)
+            @* @foreach(Users u in users)
             {
                 <UserRow user="@u"></UserRow>
-            }
-            @foreach(Posts p in posts)
-            {
-                <PostRow post="p"></PostRow>
-            }
+            } *@
         </tbody>
     </table>
 </div>
 
-<div>
-    Add a user:
-    <div>
-        Add User:
-        @* <br />Name: <input type="text" id="Name" @bind="name" />
-        <br />email address: <input type="text" id="Email" @bind="email" />
-        <button @onclick=AddUser>Add User</button> *@
-    </div>
-</div>
 <div>
     Create a post:
     <div>
@@ -53,22 +74,60 @@
     static List<Posts> posts = new List<Posts>();
     static Dictionary<Users, List<Posts>> dict = new Dictionary<Users, List<Posts>>();
 
-    private string inputpost { get; set; }
+    string inputpost;
+    private int InputNumber { get; set; } = 0;
     private async Task PostPost()
     {
         int id = posts.Any() ? posts.Max(b => b.Id) + 1 : 1;
 
         var newpost = new Posts { Id = id, Post = inputpost };
 
-        try
-        {
-            Posts post = await InterfaceAPI.GetPosts(id);
-
-            // Post the Pokemon to the APIService
-            await Api.PostPost(post);
-        }
-        catch (Exception ex){}
+        posts.Add(newpost);
     }
 
+
+
+    string name;
+    string email;
+    string password;
+    string username;
+    void AddUser()
+    {
+        int id = users.Any() ? users.Max(u => u.Id) + 1 : 1;
+        users.Add(new Users { Id = id, Name = name, Email = email, Password = password, Username = username });
+    }
+
+    string useId;
+    string name2;
+    string email2;
+    string password2;
+    string username2;
+    void EditUser()
+    {
+        if (int.TryParse(useId, out int userId))
+        {
+            Users user = users.FirstOrDefault(u => u.Id == userId);
+            if (user != null)
+            {
+                if (!string.IsNullOrEmpty(name)) user.Name = name2;
+                if (!string.IsNullOrEmpty(email)) user.Email = email2;
+                if (!string.IsNullOrEmpty(email)) user.Password = password2;
+                if (!string.IsNullOrEmpty(email)) user.Username = username2;
+            }
+        }
+    }
+
+    string useId2;
+    void DeleteUser()
+    {
+        if (int.TryParse(useId2, out int userId))
+        {
+            Users user = users.FirstOrDefault(u => u.Id == userId);
+            if (user != null)
+            {
+                users.Remove(user);
+            }
+        }
+    }
 
 }
