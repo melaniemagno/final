@@ -1,0 +1,17 @@
+﻿@using finalproj.Data;
+
+<tr>
+    <td>@user.Username</td>
+    <td>@post.Post</td>
+</tr>
+
+
+
+@code {
+    [Parameter]
+    public Users user { get; set; }
+
+    [Parameter]
+    public Posts post { get; set; }
+
+}

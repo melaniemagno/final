@@ -1,0 +1,38 @@
+﻿@page "/blogposts"
+@using finalproj.Data
+@using finalproj.Services
+@using finalproj.Shared
+@using finalproj.Pages
+@inject DatabaseApi API
+<h3>Generic Blog Site</h3>
+
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Posts</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var entry in dict)
+            {
+                <BlogPostro user="@entry.Key"></BlogPostro>
+                foreach( var post in entry.Value)
+                {
+                    <BlogPostro post="@post"></BlogPostro>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+@code {
+    //need to create list of users and posts
+    static List<Users> users = new List<Users>();
+    static List<Posts> posts = new List<Posts>();
+    static Dictionary<Users, List<Posts>> dict = new Dictionary<Users, List<Posts>>();
+
+}

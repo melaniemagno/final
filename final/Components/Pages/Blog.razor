@@ -1,0 +1,74 @@
+﻿@page "/blogposts"
+@using final.Components
+@using final.Components.Layout
+@using final.Data
+@using final.Services
+@inject DbApi Api
+@inject InterfaceAPI InterfaceAPI
+
+<h3>Generic Blog Site</h3>
+
+<div>
+    <table>
+        <thead>
+            <tr>
+
+            </tr>
+        </thead>
+        <tbody>            
+            @foreach(Users u in users)
+            {
+                <UserRow user="@u"></UserRow>
+            }
+            @foreach(Posts p in posts)
+            {
+                <PostRow post="p"></PostRow>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    Add a user:
+    <div>
+        Add User:
+        @* <br />Name: <input type="text" id="Name" @bind="name" />
+        <br />email address: <input type="text" id="Email" @bind="email" />
+        <button @onclick=AddUser>Add User</button> *@
+    </div>
+</div>
+<div>
+    Create a post:
+    <div>
+        Add Post:
+        <br /><input type="text" id="Post" @bind="posts" />
+        <button @onclick=PostPost>Post to the real world!</button>
+    </div>
+</div>
+
+
+@code {
+    //need to create list of users and posts
+    static List<Users> users = new List<Users>();
+    static List<Posts> posts = new List<Posts>();
+    static Dictionary<Users, List<Posts>> dict = new Dictionary<Users, List<Posts>>();
+
+    private string inputpost { get; set; }
+    private async Task PostPost()
+    {
+        int id = posts.Any() ? posts.Max(b => b.Id) + 1 : 1;
+
+        var newpost = new Posts { Id = id, Post = inputpost };
+
+        try
+        {
+            Posts post = await InterfaceAPI.GetPosts(id);
+
+            // Post the Pokemon to the APIService
+            await Api.PostPost(post);
+        }
+        catch (Exception ex){}
+    }
+
+
+}

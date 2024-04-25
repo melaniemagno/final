@@ -1,0 +1,15 @@
+﻿@using final.Data;
+
+<tr>
+    <td>@user.Username</td>
+    <td>@user.Id</td>
+</tr>
+
+
+
+@code {
+    [Parameter]
+    public Users user { get; set; }
+
+
+}
